@@ -3,7 +3,7 @@ import threading
 
 # Server Configuration
 HOST = '0.0.0.0'  # Listen on all available network interfaces
-PORT = 4444       # Port to listen on
+PORT = 4000       # Port to listen on
 
 # Dictionary to store connected clients: {username: socket_object}
 clients = {}

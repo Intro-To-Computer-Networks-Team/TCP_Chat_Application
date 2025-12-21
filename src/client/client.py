@@ -4,7 +4,7 @@ import sys
 
 # Server Connection Details
 SERVER_IP = '127.0.0.1' # Localhost (change this if server is on another machine)
-SERVER_PORT = 4444
+SERVER_PORT = 4000
 
 def receive_messages(sock):
     """
