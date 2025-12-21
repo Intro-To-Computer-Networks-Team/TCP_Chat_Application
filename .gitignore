@@ -1,0 +1,33 @@
+# --- Python ---
+# Compiled bytecode files - no need to version control these
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments (heavy folders, do not commit)
+venv/
+env/
+.venv/
+
+# --- IDE & Editors ---
+# Local editor configurations (VS Code, PyCharm, etc.)
+.vscode/
+.idea/
+*.swp
+
+# --- OS Generated Files ---
+# Mac and Windows system clutter
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# --- Project Specific ---
+# Note: Usually, large capture files (*.pcap) are ignored.
+# However, since this is a portfolio project and you want to 
+# demonstrate your analysis in the 'analysis/captures' folder, 
+# keep the following lines commented out (so pcap files ARE uploaded):
+# *.pcap
+# *.pcapng
