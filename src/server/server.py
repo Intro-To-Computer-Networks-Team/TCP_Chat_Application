@@ -76,12 +76,8 @@ class ChatServer:
                         dest_socket = self.clients[target_name]
                         dest_socket.send(f"{username}: {msg_content}".encode('utf-8'))
                     else:
-                        client_socket.send(f"[SERVER]: User '{target_name}' not found.".encode('utf-8'))
+                        client_socket.send(f"[Server]: User '{target_name}' not found.".encode('utf-8'))
                         self.update_contacts()
-
-                else:
-                    client_socket.send("[SERVER]: Invalid format. Use TARGET:MESSAGE".encode('utf-8'))
-
         except ConnectionResetError:
             print(f"[ERROR] Connection lost with {username}")
         except Exception as e:
