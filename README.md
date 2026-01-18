@@ -39,7 +39,6 @@ It features a central server that acts as a switchboard, routing messages betwee
     ```
 
 ##  Usage
-
 To simulate a chat environment, you will need to run the server in one terminal and multiple client instances in separate terminals.
 
 ### Step 1: Start the Server
