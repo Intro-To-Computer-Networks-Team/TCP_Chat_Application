@@ -72,7 +72,6 @@ The system maintains consistency between Server and Client databases, with the C
    ```
 
 ##  Usage
-
 To simulate a chat environment, you will need to run the server in one terminal and multiple client instances in separate terminals.
 
 ## ⚙️ Configuration
