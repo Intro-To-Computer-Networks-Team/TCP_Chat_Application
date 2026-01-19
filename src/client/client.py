@@ -5,13 +5,17 @@ from tkinter import ttk, messagebox, scrolledtext
 import sqlite3
 import os
 from datetime import datetime
+import time
 
 # Server Connection Details
 SERVER_IP = '127.0.0.1' # Localhost (change this if server is on another machine)
 SERVER_PORT = 4000
 
 class ChatApp:
+    """Main GUI application for the chat client."""
+
     def __init__(self,root):
+        """Initialize the chat application with UI components and database."""
         self.root = root
         self.client_socket = None
         self.recipient = None
@@ -41,17 +45,27 @@ class ChatApp:
             print(f"Error closing connections: {e}")
 
         self.root.destroy()
-        # Delete the database file on exit
+        # Delete the database file after all chats with the client are closed (to ensure no locks remain)
         try:
+            time.sleep(0.5) # Wait briefly to ensure all connections are closed
             if os.path.exists("chat_history.db"):
                 os.remove("chat_history.db")
         except Exception as e:
             print(f"Error deleting database file: {e}")
 
-
+    # ==================== UI SETUP ====================
     def setup_window(self):
+        """Configure main window size and appearance."""
         self.root.title("Chat App")
         self.root.geometry("850x650")
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        image_path = os.path.join(current_dir, "assets", "logo.png")
+        try:
+            icon_img = tk.PhotoImage(file=image_path)
+            self.root.iconphoto(True, icon_img)
+        except Exception as e:
+            print(f"Warning: Could not load icon: {e}")
+
         self.root.configure(bg="#121b22")
 
     def load_theme(self):
@@ -59,11 +73,14 @@ class ChatApp:
         ttk.Style().theme_use('forest-dark')
 
     def create_login_ui(self):
+        """Build the login interface."""
         self.login_frame = ttk.Frame(self.root)
 
+        # Instruction Label
         self.lbl_instruction = ttk.Label(self.login_frame, text="Welcome! Please Log In:", font=("Arial", 16))
         self.lbl_instruction.pack(pady=20)
 
+        # Username Entry
         self.name_entry = ttk.Entry(self.login_frame, font=("Arial", 12))
         self.name_entry.pack(pady=10, ipadx=10, ipady=5)
         self.name_entry.bind('<Return>', self.connect_and_login)
@@ -72,9 +89,10 @@ class ChatApp:
         btn.pack(pady=20, fill='x')
 
     def create_chat_ui(self):
-        """ Main chat UI frame."""
+        """Build the main chat interface with contacts list and message area."""
         self.chat_frame = tk.Frame(self.root, bg="#121b22")
-        """ Sidebar for contacts and main chat area."""
+
+        # ==================== SIDEBAR: CONTACTS LIST ====================
         self.sidebar = tk.Frame(self.chat_frame, width=250, bg="#202c33")
         self.sidebar.pack(side=tk.LEFT, fill=tk.Y)
         self.sidebar.pack_propagate(False)
@@ -91,21 +109,24 @@ class ChatApp:
         self.contacts.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         self.contacts.bind("<<TreeviewSelect>>", self.on_contact_click)
 
+        # ==================== MAIN CHAT AREA ====================
         self.main_area = tk.Frame(self.chat_frame, bg="#0b141a")
         self.main_area.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
+        # Header showing current chat recipient
         self.header_frame = tk.Frame(self.main_area, bg="#202c33", height=50)
         self.header_frame.pack(fill="x")
         self.chat_label = tk.Label(self.header_frame, text="Select a user...", bg="#202c33", fg="white",font=("Arial", 12))
         self.chat_label.pack(pady=10)
-        """ Chat history area."""
+
+        # Chat history display area
         self.chat_history = scrolledtext.ScrolledText(self.main_area, state='disabled', bg="#0b141a", fg="white")
         self.chat_history.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         self.chat_history.tag_config('me', justify='right', foreground='#00ff00')
         self.chat_history.tag_config('other', justify='left', foreground='#ffffff')
         self.chat_history.tag_config("time_tag", foreground="gray", font=("Arial", 8))
 
-
+        # ==================== MESSAGE INPUT AREA ====================
         input_area = tk.Frame(self.main_area, bg="#202c33", height=60)
         input_area.pack(fill="x",side="bottom")
 
@@ -116,6 +137,7 @@ class ChatApp:
         send_button = ttk.Button(input_area, text="Send",style="Accent.TButton",command=self.send_message)
         send_button.pack(side=tk.RIGHT, padx=10)
 
+    # ==================== FRAME SWITCHING ====================
     def show_login_frame(self):
         """ Display the login frame and hide the chat frame."""
         self.chat_frame.pack_forget()
@@ -126,6 +148,8 @@ class ChatApp:
         self.login_frame.pack_forget()
         self.chat_frame.pack(fill='both', expand=True)
 
+
+    # ==================== CONNECTION & AUTHENTICATION ====================
     def connect_and_login(self,event=None):
         # Create a TCP/IP socket
         username=self.name_entry.get()
@@ -144,6 +168,16 @@ class ChatApp:
         try:
             # Receive welcome message
             welcome_msg = self.client_socket.recv(1024).decode('utf-8')
+
+            # Handle maximum connections reached
+            if welcome_msg == "[Server]: Maximum connections reached. Try again later.":
+                error= welcome_msg.replace("[Server]:", "").strip()
+                messagebox.showerror("Connection Error", error)
+                self.client_socket.close()
+                self.db.close()
+                root.destroy()
+                return
+
             print(f"[Server]: {welcome_msg}")
             # Send username
             self.username = username
@@ -154,42 +188,108 @@ class ChatApp:
         self.show_chat_frame()
         self.root.title(f"Chat App - Logged in as: {self.username}")
 
+        # Start thread to receive messages
         receive_thread = threading.Thread(target=self.receive_messages, daemon=True)
         receive_thread.daemon = True  # Thread ends when main program ends
         receive_thread.start()
 
-    def update_contact_list(self, new_contact):
+
+    # ==================== CONTACTS MANAGEMENT ====================
+    def update_contact_list(self, new_contact,contact_to_remove=None):
         """ Update the contact list in the UI."""
         existing_names = {self.contacts.item(item)['values'][0] for item in self.contacts.get_children()}
-        names = new_contact.split(",")
+        names = new_contact.split(",") if new_contact else []
+
+        # Add new contacts that are not already in the list
         for contact in names:
             contact = contact.strip()
-            if contact == self.username:
-                continue  # Skip adding self to contact list
-            if contact and contact not in existing_names:  # Avoid adding empty names or duplicates
+            if not contact or contact==self.username:# Avoid adding empty names and self
+                continue
+
+            if contact not in existing_names:
+                print(f"[DEBUG ADDING CONTACT]: {contact}")
+                #set initial unread messages to 0
                 self.unread_messages[contact] = 0
                 self.contacts.insert("", tk.END, values=(contact,))
+                existing_names.add(contact)
+        # Remove contacts that are no longer online
+        for item in self.contacts.get_children():
+            item_data = self.contacts.item(item)
+            contact_name = item_data['values'][0]
+            if contact_name not in names and contact_name != self.username:
+                print(f"[DEBUG REMOVING STALE CONTACT]: {contact_name}")
+                self.contacts.delete(item)
+                if contact_name in self.unread_messages:
+                    del self.unread_messages[contact_name]
+        # Remove specific contact if provided
+        if contact_to_remove:
+            print(f"[DEBUG REMOVING CONTACT]: {contact_to_remove}")
+            for item in self.contacts.get_children():
+                item_data = self.contacts.item(item)
+                if item_data['values'][0] == contact_to_remove:
+                    self.contacts.delete(item)
+                    if contact_to_remove in self.unread_messages:
+                        del self.unread_messages[contact_to_remove]
+                    break
+
         print(f"[DEBUG CONTACT LIST UPDATED]: {new_contact}")
 
+    # ==================== MESSAGE RECEIVING ====================
     def receive_messages(self):
+        """ Thread function to receive messages from the server."""
         while True:
             try:
                 msg = self.client_socket.recv(1024).decode('utf-8')
                 print(f"[DEBUG RAW MSG]: {msg}")
                 if not msg:
                     break
-                #Receive messages from the server.
+                #Handle messages from the server.
                 if msg.startswith("[Server]:"):
                     print (f"[SERVER MSG]: {msg}")
-                    print(f"[DEBUG USERNAME]: {self.recipient}")
-                    if msg == f"[Server]: User '{self.recipient}' not found.":
-                        messagebox.showerror("Error", "User not found")
-                        self.recipient = None
-                        self.chat_label.config(text="Select a user...", fg="white")
-                    if  msg == f"[Server]: Username already taken. Disconnecting.":
-                        msg = msg.replace("[Server]:", "").strip()
-                        messagebox.showerror("Login Error", msg)
-                        self.client_socket.close()
+
+                    # Handle user disconnected notification
+                    if "has disconnected." in msg:
+                        try:
+                            disconnected_user = msg.split("'")[1]
+                            print(f"[DEBUG DISCONNECTED USER]: {disconnected_user}")
+                            if self.recipient == disconnected_user:
+                                messagebox.showerror("Disconnected", f"User '{disconnected_user}' has disconnected.")
+                                self.recipient = None
+                                self.chat_label.config(text="Select a user...", fg="white")
+
+                                # Clear chat history
+                                self.chat_history.config(state='normal')
+                                self.chat_history.delete('1.0', 'end')
+                                self.chat_history.config(state='disabled')
+
+                                self.update_contact_list("",disconnected_user)
+                        except Exception as e:
+                            print(f"[ERROR HANDLING DISCONNECTION]: {e}")
+
+                    # Handle user not found error (when sending message to offline user)
+                    elif "not found." in msg:
+                        try:
+                            user_to_delete=self.recipient
+                            messagebox.showerror("Error", f"User '{user_to_delete}' not found or offline.")
+                            self.recipient = None
+                            self.chat_label.config(text="Select a user...", fg="white")
+                            # Clear chat history
+                            self.chat_history.config(state='normal')
+                            self.chat_history.delete('1.0', 'end')
+                            self.chat_history.config(state='disabled')
+                            self.update_contact_list("",user_to_delete)
+                        except Exception as e:
+                            print(f"[ERROR HANDLING USER NOT FOUND]: {e}")
+
+                    # Handle username already taken error
+                    elif "Username already taken" in msg:
+                        error = msg.replace("[Server]:", "").strip()
+                        messagebox.showerror("Username Taken Error", error)
+                        try:
+                            self.client_socket.close()
+                            self.db.close()
+                        except Exception as e:
+                            print(f"[ERROR CLOSING CONNECTIONS]: {e}")
                         self.root.destroy()
                         return
                 #Update contact list if message starts with CONTACTS:
@@ -203,14 +303,16 @@ class ChatApp:
                 #Handle regular messages
                 else:
                     if ":" in msg:
+                        timestamp= datetime.now().strftime("%H:%M")
                         sender,content = msg.split(":",1)
                         sender = sender.strip()
                         content = content.strip()
-                        self.db.save_message(sender,self.username,content)
-
+                        self.db.save_message(sender,self.username,content,timestamp)
+                        # If chat with sender is open, display message
                         if self.recipient == sender:
                             self.chat_history.config(state='normal')
                             self.chat_history.insert(tk.END, f"{content}\n","other")
+                            self.chat_history.insert(tk.END, f"{timestamp}\n", ("other","time_tag"))
                             self.chat_history.see(tk.END)
                             self.chat_history.config(state='disabled')
                         # If chat with sender is not open, show alert
@@ -238,6 +340,7 @@ class ChatApp:
                 self.contacts.set(item, "Alerts", "")
                 self.contacts.item(item, tags=())
 
+    # ==================== MESSAGE SENDING ====================
     def send_message(self,event=None):
         """ Send message to the selected recipient."""
         msg = self.msg_entry.get()
@@ -247,30 +350,36 @@ class ChatApp:
             messagebox.showwarning("Error", "Please select a user from the list first!")
             return
         try:
+            timestamp = datetime.now().strftime("%H:%M")
             final_msg = f"{self.recipient}:{msg}"
             print(f"[DEBUG SENDING MSG]: {final_msg}")
             self.client_socket.send(final_msg.encode('utf-8'))
-
-            self.db.save_message(self.username,self.recipient,msg)
+            # Save sent message to the database
+            self.db.save_message(self.username,self.recipient,msg,timestamp)
 
             self.chat_history.config(state='normal')
             self.chat_history.insert(tk.END, f"{msg}\n","me")
+            self.chat_history.insert(tk.END, f"{timestamp}\n", ("me","time_tag"))
+
             self.chat_history.see(tk.END)
             self.chat_history.config(state='disabled')
 
             self.msg_entry.delete(0, tk.END)
         except Exception as e:
             messagebox.showerror("Error", f"Failed to send: {e}")
-
+    # ==================== CONTACT SELECTION ====================
     def on_contact_click(self, event):
         """ Handle contact selection from the contact list."""
         selected_item = self.contacts.selection()
         if selected_item:
             item_data = self.contacts.item(selected_item)
             clicked_name = item_data['values'][0]
+            print(f"[CONTACT CLICKED]: {clicked_name}")
+            if clicked_name == self.username:
+                self.update_contact_list("",clicked_name)
+                return  # Prevent chatting with self
             if self.recipient == clicked_name:
                 return  # Already chatting with this user
-
             self.recipient = clicked_name
             self.chat_label.config(text=f"Chat with: {self.recipient}", fg="#00ff00")
             # Clear unread messages for this contact
@@ -281,13 +390,12 @@ class ChatApp:
             self.load_history_from_db(clicked_name)
             self.chat_history.config(state='normal')
 
-
-
+    # ==================== CHAT HISTORY ====================
     def load_history_from_db(self, other_user):
         """ Load chat history from the database and display it in the chat history area."""
         print(f"--- Loading history for {other_user} ---")
         self.chat_history.config(state='normal')
-        self.chat_history.delete(1.0, 'end')
+        self.chat_history.delete('1.0', 'end')
 
         rows=self.db.get_chat_history(self.username, other_user)
 
@@ -301,6 +409,8 @@ class ChatApp:
         self.chat_history.see(tk.END)
         self.chat_history.config(state='disabled')
 
+
+# ==================== DATABASE MANAGEMENT ====================
 class DatabaseManager:
     """ Class to manage SQLite database operations for chat history."""
     def __init__(self, db_name="chat_history.db"):
@@ -309,6 +419,7 @@ class DatabaseManager:
         self.connection.commit()
 
     def create_table(self):
+        """ Create messages table if it doesn't exist."""
         cursor=self.connection.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS messages (
@@ -321,19 +432,26 @@ class DatabaseManager:
         self.connection.commit()
         cursor.close()
 
-    def save_message(self, sender, receiver, message):
+    def save_message(self, sender, receiver, message,timestamp=None):
+        """ Save a message to the database."""
         try:
             timestamp = datetime.now().strftime("%H:%M")
             cursor = self.connection.cursor()
-            cursor.execute("INSERT INTO messages VALUES (?, ?, ?,?)", (sender, receiver, message, timestamp))
+            query = """
+                    INSERT INTO messages (sender, receiver, message, timestamp)
+                    VALUES (?, ?, ?, ?)
+                    """
+            cursor.execute(query, (sender, receiver, message, timestamp))
+            #cursor.execute("INSERT INTO messages VALUES (?, ?, ?,?)", (sender, receiver, message, timestamp))
             self.connection.commit()
             cursor.close()
         except Exception as e:
             print(f"DB Save Error: {e}")
     def get_chat_history(self, user1 ,user2):
+        """ Retrieve chat history between two users."""
         try:
             cursor = self.connection.cursor()
-            cursor.execute(''' SELECT sender, message,timestamp FROM messages WHERE (sender= ? AND receiver=?) OR (sender=? AND receiver=?) ORDER BY timestamp ASC ''', (user1, user2, user2, user1))
+            cursor.execute(''' SELECT DISTINCT sender, message,timestamp FROM messages WHERE (sender= ? AND receiver=?) OR (sender=? AND receiver=?) ORDER BY timestamp ASC ''', (user1, user2, user2, user1))
             rows=cursor.fetchall()
             cursor.close()
             return rows
