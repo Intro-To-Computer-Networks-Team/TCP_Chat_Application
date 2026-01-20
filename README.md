@@ -16,7 +16,7 @@ It features a central server that acts as a switchboard, routing messages betwee
 - `forest-dark.tcl` — Tkinter theme.
 - `chat_history.db` / `server_chat.db` — SQLite databases created at runtime.
 - `README.md` — project documentation.
-- `LICENSE` — (to be added) project license.
+- `LICENSE` — project license.
 
 ## 💾 Database Schema
 
@@ -183,7 +183,7 @@ TCP_Chat_Application/
 ```
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. (To be added)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 * Inspired by the need to understand low-level networking concepts.
