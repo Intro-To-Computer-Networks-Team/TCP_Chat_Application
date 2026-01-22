@@ -69,8 +69,15 @@ class ChatApp:
         self.root.configure(bg="#121b22")
 
     def load_theme(self):
-        self.root.tk.call('source', 'forest-dark.tcl')
-        ttk.Style().theme_use('forest-dark')
+        # Load the theme file relative to this script's directory so it works
+        # regardless of the current working directory when the script is run.
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        tcl_path = os.path.join(current_dir, "forest-dark.tcl")
+        try:
+            self.root.tk.call('source', tcl_path)
+            ttk.Style().theme_use('forest-dark')
+        except Exception as e:
+            print(f"Warning: Could not load theme '{tcl_path}': {e}")
 
     def create_login_ui(self):
         """Build the login interface."""
