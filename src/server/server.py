@@ -151,30 +151,57 @@ class ChatServer:
         # Begin listening for incoming connections (queue up to 5)
         self.server_socket.listen(max_clients) # Allow up to 5 queued connections (change as needed)
         print(f"[LISTENING] Server is listening on {HOST}:{PORT}")
-
+        self.server_socket.settimeout(1.0)  # Set timeout to allow graceful shutdown
         # Accept and handle client connections continuously
-        while True:
-            # Accept new client connection
-            client_sock, addr = self.server_socket.accept()
-            print(f"[CONNECTION] Connection from {addr}")
+        try:
+            while True:
+                try:
+                    # Accept new client connection
+                    client_sock, addr = self.server_socket.accept()
+                    print(f"[CONNECTION] Connection from {addr}")
 
-            #Check for maximum connections
-            with self.lock:
-                if len(self.clients) >=max_clients: # Max 5 connections (change as needed)
-                    print(f"[MAX CONNECTIONS REACHED] Rejecting connection from {addr}")
-                    try:
-                        client_sock.send("[Server]: Maximum connections reached. Try again later.".encode('utf-8'))
-                    except Exception as e:
-                        print(f"[ERROR] Could not send max connection message to {addr}: {e}")
-                    client_sock.close()
+                    #Check for maximum connections
+                    with self.lock:
+                        if len(self.clients) >=max_clients: # Max 5 connections (change as needed)
+                            print(f"[MAX CONNECTIONS REACHED] Rejecting connection from {addr}")
+                            try:
+                                client_sock.send("[Server]: Maximum connections reached. Try again later.".encode('utf-8'))
+                            except Exception as e:
+                                print(f"[ERROR] Could not send max connection message to {addr}: {e}")
+                            client_sock.close()
+                            continue
+
+                    # Spawn new thread to handle this client
+                    thread = threading.Thread(target=self.handle_client, args=(client_sock,))
+                    thread.start()
+                except socket.timeout:
                     continue
 
-            # Spawn new thread to handle this client
-            thread = threading.Thread(target=self.handle_client, args=(client_sock,))
-            thread.start()
+                # Display current number of active connections
+                print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
+        except KeyboardInterrupt:
+            print("\n[SHUTTING DOWN] Server is shutting down.")
+        finally:
+            # Close the server socket on shutdown
+            print("[SERVER] Broadcasting shutdown message to all clients")
+            shutdown_msg = "[Server]: Server is shutting down. Disconnecting...\n"
+            active_sockets = list(self.clients.values())
+            for client_socket in active_sockets:
+                try:
+                    client_socket.send(shutdown_msg.encode('utf-8'))
+                    time.sleep(0.1)
+                except Exception as e:
+                    print(f"[ERROR] Could not send shutdown message to a client: {e}")
+                finally:
+                    try:
+                        client_socket.close()
+                    except Exception as e:
+                        print(f"[ERROR] Could not close client socket: {e}")
+            try:
+                self.server_socket.close()
+            except Exception as e:
+                print(f"[ERROR] Could not close server socket: {e}")
 
-            # Display current number of active connections
-            print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
 # ==================== SERVER ENTRY POINT ====================
 if __name__ == "__main__":

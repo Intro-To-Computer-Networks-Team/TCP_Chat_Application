@@ -253,7 +253,16 @@ class ChatApp:
                 #Handle messages from the server.
                 if msg.startswith("[Server]:"):
                     print (f"[SERVER MSG]: {msg}")
-
+                    # Handle server shutdown notification
+                    if "Server is shutting down. Disconnecting..." in msg:
+                        messagebox.showinfo("Server Shutdown", "Server is shutting down. The application will close.")
+                        try:
+                            self.client_socket.close()
+                            self.db.close()
+                        except Exception as e:
+                            print(f"[ERROR CLOSING CONNECTIONS]: {e}")
+                        self.root.destroy()
+                        return
                     # Handle user disconnected notification
                     if "has disconnected." in msg:
                         try:
