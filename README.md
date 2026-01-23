@@ -182,9 +182,6 @@ TCP_Chat_Application/
 └── README.md
 ```
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgments
 * Inspired by the need to understand low-level networking concepts.
 * Thanks to the Python community for extensive documentation on sockets and threading.
@@ -192,3 +189,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 * SQLite documentation for database management.
 * Open-source projects that demonstrate similar concepts.
 * Special thanks to team members for collaboration and testing.
+  
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
