@@ -4,6 +4,8 @@ A lightweight, multi-threaded chat application built from scratch using Python's
 This project demonstrates the implementation of a custom application-layer protocol and manages concurrent client connections without relying on high-level frameworks.
 
 ## About The Project
+<img width="1177" height="792" alt="Screenshot 2026-01-23 at 19 16 12" src="https://github.com/user-attachments/assets/205e87ff-832e-4d01-91b6-eb0c4993c201" />
+<img width="1243" height="840" alt="Screenshot 2026-01-23 at 19 19 48" src="https://github.com/user-attachments/assets/24b37c5e-5f51-4444-95a5-9c8c806a0f56" />
 
 The goal of this project was to dive deep into low-level networking concepts by building a distributed system "the hard way." Instead of using abstract libraries like Socket.IO or HTTP frameworks, this application manages the raw byte streams directly over the TCP/IP stack.
 
