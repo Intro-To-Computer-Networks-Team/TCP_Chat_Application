@@ -38,8 +38,12 @@ class ChatApp:
     def on_closing(self):
         """ Handle application closure."""
         try:
-            # Close socket and database connection
+            # Shutdown socket gracefully before closing
             if self.client_socket:
+                try:
+                    self.client_socket.shutdown(socket.SHUT_RDWR)
+                except Exception as e:
+                    print(f"Error during socket shutdown: {e}")
                 self.client_socket.close()
             self.db.close()
         except Exception as e:
@@ -316,7 +320,15 @@ class ChatApp:
                 msg = self.client_socket.recv(1024).decode('utf-8')
                 print(f"[DEBUG RAW MSG]: {msg}")
                 if not msg:
-                    break
+                    print("[ERROR] Server connection closed")
+                    messagebox.showwarning("Connection Lost", "Lost connection to server.")
+                    try:
+                        self.client_socket.close()
+                        self.db.close()
+                    except Exception as e:
+                        print(f"[ERROR CLOSING CONNECTIONS]: {e}")
+                    self.root.destroy()
+                    return
                 #Handle messages from the server.
                 if msg.startswith("[Server]:"):
                     print (f"[SERVER MSG]: {msg}")

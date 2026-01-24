@@ -36,7 +36,13 @@ CREATE TABLE IF NOT EXISTS messages (
     receiver TEXT,
     message TEXT
 );
+```
 
+## 1. Client Database 
+**File:** `src/client/chat_history.db`
+The client maintains a local history of conversations, including timestamps for each message to facilitate local display and user experience.
+
+```sql
 CREATE TABLE IF NOT EXISTS messages (
     sender TEXT,
     receiver TEXT,

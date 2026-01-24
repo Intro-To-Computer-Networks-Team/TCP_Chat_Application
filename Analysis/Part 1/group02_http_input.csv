@@ -1,0 +1,201 @@
+msg_id,src_app,dst_app,timestamp,src_ip,dst_ip,protocol,src_port,dst_port,app_protocol,payload_size,latency_ms,layer,flags,message
+1,client_app,server_app,0.001,192.233.29.121,154.221.118.140,UDP,49349,53,SMTP,0,79.966,Application,SYN,RCPT TO:<bob@example.com>
+2,client_app,server_app,0.308223,10.101.47.176,74.15.108.254,TCP,27320,993,SMTP,0,106.927,Application,,QUIT
+3,client_app,server_app,0.799213,192.126.38.38,75.43.89.89,UDP,34214,110,FTP,0,66.383,Application,RST,LIST -al
+4,client_app,server_app,0.841074,192.5.187.144,97.180.78.93,TCP,61039,443,DNS,128,58.029,Application,"SYN,ACK",Standard query MX gmail.com
+5,client_app,server_app,1.00774,10.212.181.234,90.6.210.9,TCP,33554,22,DNS,64,113.535,Transport,ACK,Standard query MX gmail.com
+6,client_app,server_app,1.142691,192.206.222.105,43.40.68.137,TCP,22621,995,HTTP,2048,51.994,Application,RST,GET /style.css HTTP/1.1
+7,client_app,server_app,1.147504,172.185.68.161,28.191.191.88,TCP,61933,995,SMTP,512,69.217,Application,"FIN,ACK",250 OK
+8,client_app,server_app,1.478796,192.232.47.54,27.76.104.247,TCP,18664,21,FTP,0,146.421,Transport,RST,LIST -al
+9,client_app,server_app,1.546998,172.119.198.234,50.5.147.24,UDP,1362,53,SSH,64,53.491,Transport,RST,Key Exchange Init
+10,client_app,server_app,1.821005,172.183.141.83,169.106.137.39,TCP,61533,143,HTTPS,256,3.856,Application,"FIN,ACK",Data payload for HTTPS
+11,client_app,server_app,2.222807,192.235.192.155,133.43.169.30,TCP,10630,21,HTTPS,512,58.585,Transport,ACK,Data payload for HTTPS
+12,client_app,server_app,2.682095,10.240.132.19,83.62.253.161,TCP,22504,110,DNS,128,45.146,Application,ACK,Standard query response A 142.250.1.1
+13,client_app,server_app,2.719782,192.62.222.151,33.228.103.155,UDP,7417,110,FTP,128,56.548,Transport,ACK,LIST -al
+14,client_app,server_app,2.824991,192.164.200.183,151.28.168.112,TCP,54955,53,HTTP,2048,120.818,Transport,RST,HTTP/1.1 404 Not Found
+15,client_app,server_app,3.24244,172.174.23.9,126.130.106.132,UDP,27095,143,HTTP,1024,71.252,Transport,ACK,HTTP/1.1 404 Not Found
+16,client_app,server_app,3.292208,172.49.214.165,161.16.38.188,UDP,12510,22,HTTPS,0,78.058,Application,"FIN,ACK",Data payload for HTTPS
+17,client_app,server_app,3.402993,172.247.27.198,91.114.172.104,UDP,2945,993,HTTPS,0,123.384,Transport,"SYN,ACK",Data payload for HTTPS
+18,client_app,server_app,3.546614,172.41.88.161,24.119.41.14,TCP,62172,443,HTTP,128,44.234,Application,"SYN,ACK",GET /index.html HTTP/1.1
+19,client_app,server_app,3.766902,10.34.156.84,32.239.178.120,TCP,48757,993,FTP,64,36.169,Application,"FIN,ACK",LIST -al
+20,client_app,server_app,4.160679,10.2.75.113,133.92.175.132,TCP,44703,80,HTTP,64,56.378,Application,,HTTP/1.1 404 Not Found
+21,client_app,server_app,4.526595,172.231.226.103,196.112.179.206,TCP,35260,80,HTTP,1024,20.297,Transport,SYN,HTTP/1.1 404 Not Found
+22,client_app,server_app,5.007848,192.216.238.54,67.100.240.228,TCP,23457,25,HTTP,2048,132.242,Transport,ACK,GET /style.css HTTP/1.1
+23,client_app,server_app,5.480352,172.245.128.141,117.208.230.211,UDP,4301,995,HTTP,0,138.76,Application,"SYN,ACK",GET /index.html HTTP/1.1
+24,client_app,server_app,5.50361,172.186.220.98,108.243.85.57,TCP,41860,80,HTTPS,128,85.85,Transport,"SYN,ACK",Data payload for HTTPS
+25,client_app,server_app,6.001604,10.171.189.125,184.46.124.240,TCP,48497,25,HTTPS,0,96.01,Application,SYN,Data payload for HTTPS
+26,client_app,server_app,6.265075,10.215.148.118,44.225.157.202,TCP,33761,25,SMTP,0,123.531,Application,"FIN,ACK",250 OK
+27,client_app,server_app,6.644479,192.233.19.244,200.160.138.124,TCP,54284,993,SMTP,0,144.838,Application,,HELO mail.server.com
+28,client_app,server_app,6.721692,10.13.186.106,35.90.237.110,UDP,62410,110,FTP,64,140.048,Application,ACK,LIST -al
+29,client_app,server_app,6.866466,10.217.243.113,36.43.56.68,TCP,41629,21,FTP,64,55.116,Transport,"FIN,ACK",PASS password123
+30,client_app,server_app,6.884444,10.145.34.107,148.240.132.113,UDP,55506,995,DNS,64,18.533,Application,"PSH,ACK",Standard query 0x1234 A google.com
+31,client_app,server_app,7.023069,172.11.31.139,53.103.167.77,UDP,3799,110,HTTP,64,76.489,Application,ACK,HTTP/1.1 200 OK
+32,client_app,server_app,7.038954,172.150.104.228,70.86.90.222,UDP,59801,143,SSH,512,25.502,Application,"SYN,ACK",Key Exchange Init
+33,client_app,server_app,7.13511,10.96.181.219,53.188.183.89,UDP,30705,995,HTTP,64,43.343,Application,"SYN,ACK",HTTP/1.1 200 OK
+34,client_app,server_app,7.400523,10.227.139.25,139.9.10.184,TCP,64607,993,HTTP,512,15.145,Application,,POST /api/login HTTP/1.1
+35,client_app,server_app,7.711272,172.50.158.178,193.86.32.142,TCP,19202,21,SMTP,512,145.742,Transport,SYN,HELO mail.server.com
+36,client_app,server_app,7.770027,10.213.127.244,63.7.189.7,UDP,58072,22,SSH,256,36.15,Application,SYN,SSH-2.0-OpenSSH_8.9p1
+37,client_app,server_app,8.132234,10.233.46.102,45.248.117.244,TCP,55364,80,SMTP,0,34.7,Transport,,HELO mail.server.com
+38,client_app,server_app,8.208836,10.97.45.37,130.94.206.92,TCP,64937,143,SSH,0,49.962,Application,"PSH,ACK",SSH-2.0-OpenSSH_8.9p1
+39,client_app,server_app,8.434783,192.165.118.43,167.152.161.141,TCP,10110,143,HTTPS,0,32.262,Transport,,Data payload for HTTPS
+40,client_app,server_app,8.669832,172.5.228.76,84.223.216.167,UDP,13884,25,SSH,128,66.038,Transport,RST,Diffie-Hellman Key Exchange
+41,client_app,server_app,8.851348,172.211.0.2,126.26.242.90,TCP,62873,53,HTTP,2048,11.993,Application,SYN,HTTP/1.1 200 OK
+42,client_app,server_app,9.029388,10.86.134.44,45.68.112.160,TCP,61056,995,SMTP,0,138.205,Transport,RST,250 OK
+43,client_app,server_app,9.378388,172.128.88.219,151.191.163.66,UDP,44410,993,FTP,512,11.277,Transport,,PASS password123
+44,client_app,server_app,9.716582,172.236.207.241,74.119.71.208,UDP,44768,21,DNS,64,103.957,Transport,RST,Standard query 0x1234 A google.com
+45,client_app,server_app,10.185283,172.37.246.254,217.205.240.86,UDP,43156,25,SMTP,128,15.799,Application,ACK,QUIT
+46,client_app,server_app,10.537986,192.57.251.24,206.29.123.9,UDP,33413,25,HTTP,1024,75.569,Application,SYN,POST /api/login HTTP/1.1
+47,client_app,server_app,10.977907,172.84.139.217,42.253.194.119,TCP,25490,25,SMTP,0,107.045,Transport,RST,RCPT TO:<bob@example.com>
+48,client_app,server_app,11.004447,10.31.198.1,183.14.157.236,UDP,57998,80,SSH,0,66.074,Application,SYN,Key Exchange Init
+49,client_app,server_app,11.429096,10.83.26.123,122.221.211.79,UDP,35972,53,HTTP,64,18.446,Transport,"FIN,ACK",GET /style.css HTTP/1.1
+50,client_app,server_app,11.549555,10.170.251.142,222.101.47.145,TCP,1864,443,FTP,256,114.112,Application,"PSH,ACK",PASS password123
+51,client_app,server_app,11.950572,172.109.169.43,54.111.137.209,TCP,35925,80,HTTPS,512,114.202,Application,,Data payload for HTTPS
+52,client_app,server_app,12.429791,192.172.207.45,83.66.85.83,UDP,56158,25,HTTPS,256,56.036,Application,"SYN,ACK",Data payload for HTTPS
+53,client_app,server_app,12.460644,10.178.8.208,75.97.164.238,UDP,17757,110,HTTP,64,116.411,Transport,,POST /api/login HTTP/1.1
+54,client_app,server_app,12.471812,10.69.99.208,85.147.6.124,TCP,31136,22,SMTP,128,56.989,Transport,RST,RCPT TO:<bob@example.com>
+55,client_app,server_app,12.930258,172.80.57.82,81.177.239.183,TCP,53736,993,SMTP,0,33.959,Transport,"PSH,ACK",QUIT
+56,client_app,server_app,13.14923,172.187.78.144,162.55.130.214,TCP,13276,995,SSH,128,87.136,Application,ACK,Diffie-Hellman Key Exchange
+57,client_app,server_app,13.444744,172.7.231.48,217.92.205.30,UDP,55217,80,DNS,64,149.568,Transport,,Standard query MX gmail.com
+58,client_app,server_app,13.872894,10.226.157.57,37.28.249.240,UDP,34396,53,DNS,128,123.962,Transport,"FIN,ACK",Standard query 0x5678 AAAA youtube.com
+59,client_app,server_app,14.128237,10.18.201.102,168.206.251.72,UDP,64710,80,HTTP,2048,57.972,Transport,ACK,POST /api/login HTTP/1.1
+60,client_app,server_app,14.553446,10.228.161.233,208.212.127.208,UDP,6002,443,SMTP,512,12.495,Transport,"FIN,ACK",250 OK
+61,client_app,server_app,14.926149,172.254.238.8,223.9.140.45,TCP,14753,22,FTP,128,139.215,Application,SYN,USER administrator
+62,client_app,server_app,15.283407,10.31.222.11,80.82.113.237,TCP,42708,443,SSH,128,34.62,Transport,SYN,Key Exchange Init
+63,client_app,server_app,15.442652,10.31.4.202,214.125.15.229,TCP,51780,25,SMTP,512,41.18,Application,"SYN,ACK",MAIL FROM:<alice@example.com>
+64,client_app,server_app,15.454826,172.84.57.195,137.97.142.168,TCP,59560,21,FTP,256,37.481,Transport,,RETR readme.txt
+65,client_app,server_app,15.806759,10.37.187.230,63.246.26.152,UDP,23798,995,SMTP,128,83.185,Application,SYN,MAIL FROM:<alice@example.com>
+66,client_app,server_app,16.135219,172.61.112.75,99.243.208.123,TCP,14988,993,SSH,64,47.76,Application,"PSH,ACK",Diffie-Hellman Key Exchange
+67,client_app,server_app,16.320319,172.208.186.77,37.145.235.19,UDP,56946,993,SSH,0,21.793,Application,ACK,Diffie-Hellman Key Exchange
+68,client_app,server_app,16.798238,10.236.4.219,45.44.245.117,UDP,54466,80,FTP,64,149.297,Application,ACK,220 Service ready
+69,client_app,server_app,16.837508,172.190.238.234,107.31.25.220,UDP,60334,993,DNS,256,84.248,Transport,"FIN,ACK",Standard query 0x1234 A google.com
+70,client_app,server_app,16.915214,10.235.55.64,83.85.154.219,UDP,53276,995,HTTPS,512,66.616,Application,"SYN,ACK",Data payload for HTTPS
+71,client_app,server_app,17.374719,172.40.138.211,139.160.243.60,UDP,1559,53,DNS,128,60.695,Transport,,Standard query response A 142.250.1.1
+72,client_app,server_app,17.580022,192.246.34.71,153.11.126.126,UDP,34761,25,SSH,512,86.893,Application,RST,SSH-2.0-OpenSSH_8.9p1
+73,client_app,server_app,18.02531,10.133.104.116,40.129.19.235,TCP,42138,143,FTP,0,27.14,Transport,RST,PASS password123
+74,client_app,server_app,18.366582,10.166.127.215,125.227.117.53,TCP,36599,110,HTTPS,1024,83.319,Application,ACK,Data payload for HTTPS
+75,client_app,server_app,18.4607,10.102.187.94,24.120.113.167,TCP,54879,53,DNS,128,132.481,Transport,SYN,Standard query response A 142.250.1.1
+76,client_app,server_app,18.679836,172.130.220.39,107.115.202.120,TCP,4556,80,HTTPS,512,65.705,Transport,"FIN,ACK",Data payload for HTTPS
+77,client_app,server_app,19.149539,10.175.255.242,167.175.210.122,UDP,44984,25,HTTP,0,60.627,Application,SYN,HTTP/1.1 200 OK
+78,client_app,server_app,19.288553,192.179.156.1,85.35.15.18,TCP,25951,993,SSH,64,33.43,Application,,Key Exchange Init
+79,client_app,server_app,19.714688,10.120.46.39,208.208.23.20,UDP,61693,110,DNS,128,6.431,Application,ACK,Standard query 0x5678 AAAA youtube.com
+80,client_app,server_app,20.075514,10.37.173.59,73.35.50.156,TCP,65273,110,HTTPS,512,50.257,Application,ACK,Data payload for HTTPS
+81,client_app,server_app,20.162962,192.58.92.54,185.167.54.155,TCP,36923,993,SMTP,256,111.554,Transport,SYN,250 OK
+82,client_app,server_app,20.592052,192.45.35.142,169.130.96.30,TCP,58206,143,FTP,0,19.189,Application,"SYN,ACK",RETR readme.txt
+83,client_app,server_app,20.879817,10.178.125.53,167.25.33.185,TCP,59564,22,DNS,256,67.185,Application,RST,Standard query 0x5678 AAAA youtube.com
+84,client_app,server_app,21.316603,172.227.164.170,110.70.238.38,UDP,34493,993,DNS,64,44.132,Application,ACK,Standard query MX gmail.com
+85,client_app,server_app,21.777795,10.113.22.65,81.100.101.222,TCP,49166,53,HTTP,128,135.089,Application,RST,HTTP/1.1 404 Not Found
+86,client_app,server_app,22.240948,172.171.93.214,36.244.119.127,UDP,28024,25,FTP,256,77.75,Application,SYN,PASS password123
+87,client_app,server_app,22.321907,10.246.19.68,70.87.168.248,TCP,52562,995,HTTP,1024,41.83,Transport,"SYN,ACK",GET /index.html HTTP/1.1
+88,client_app,server_app,22.560478,192.94.249.214,115.53.39.127,UDP,27607,443,SMTP,64,76.653,Application,RST,HELO mail.server.com
+89,client_app,server_app,22.582239,172.122.127.200,213.151.185.224,TCP,36211,80,HTTP,1024,47.413,Application,,POST /api/login HTTP/1.1
+90,client_app,server_app,22.670521,192.95.235.111,179.117.124.39,UDP,38601,80,SSH,128,124.309,Transport,ACK,Key Exchange Init
+91,client_app,server_app,23.154224,172.33.152.96,202.223.234.35,UDP,25136,143,HTTP,256,83.257,Application,"FIN,ACK",GET /index.html HTTP/1.1
+92,client_app,server_app,23.156324,10.2.61.212,20.49.236.31,UDP,39275,21,SMTP,256,94.462,Transport,"PSH,ACK",QUIT
+93,client_app,server_app,23.163013,10.5.227.39,88.145.86.44,TCP,58251,21,HTTP,128,63.843,Application,RST,HTTP/1.1 404 Not Found
+94,client_app,server_app,23.634317,172.170.215.158,106.59.162.115,TCP,54966,80,DNS,64,89.309,Application,"SYN,ACK",Standard query MX gmail.com
+95,client_app,server_app,23.771082,172.202.224.98,156.116.245.81,TCP,39960,993,FTP,256,61.84,Transport,"FIN,ACK",220 Service ready
+96,client_app,server_app,23.996501,192.212.145.22,29.149.1.132,UDP,20608,443,SSH,64,120.89,Transport,"FIN,ACK",Diffie-Hellman Key Exchange
+97,client_app,server_app,24.082795,10.230.143.247,167.68.224.61,UDP,5568,53,HTTPS,64,131.132,Application,RST,Data payload for HTTPS
+98,client_app,server_app,24.094297,172.247.10.170,139.192.190.241,UDP,3972,22,HTTPS,64,12.826,Transport,"FIN,ACK",Data payload for HTTPS
+99,client_app,server_app,24.306749,192.227.107.252,110.132.111.112,UDP,55142,993,HTTP,64,143.906,Transport,"SYN,ACK",HTTP/1.1 200 OK
+100,client_app,server_app,24.465493,192.94.220.14,99.194.90.152,TCP,7763,25,HTTP,0,63.328,Application,ACK,HTTP/1.1 404 Not Found
+101,client_app,server_app,24.908432,172.63.204.194,77.7.173.200,UDP,21439,110,HTTP,0,10.314,Transport,SYN,HTTP/1.1 200 OK
+102,client_app,server_app,24.961566,172.114.173.80,216.35.213.44,TCP,1484,995,DNS,64,33.971,Application,"FIN,ACK",Standard query 0x5678 AAAA youtube.com
+103,client_app,server_app,25.255141,192.83.113.24,30.228.246.64,UDP,38062,143,SSH,64,111.011,Transport,SYN,Key Exchange Init
+104,client_app,server_app,25.614635,192.99.100.127,150.31.193.43,UDP,3063,25,SMTP,0,20.73,Transport,"FIN,ACK",RCPT TO:<bob@example.com>
+105,client_app,server_app,25.996664,172.204.76.120,152.251.245.184,TCP,27328,80,SSH,0,31.528,Application,RST,Diffie-Hellman Key Exchange
+106,client_app,server_app,26.316499,192.74.32.34,41.91.95.39,UDP,61544,80,SSH,128,145.611,Application,"SYN,ACK",Key Exchange Init
+107,client_app,server_app,26.533979,10.213.44.123,165.70.182.151,TCP,49525,995,DNS,256,91.761,Application,"SYN,ACK",Standard query MX gmail.com
+108,client_app,server_app,26.602841,192.156.177.12,75.161.57.220,UDP,57446,21,HTTP,64,123.764,Transport,,HTTP/1.1 404 Not Found
+109,client_app,server_app,26.699619,192.189.154.182,20.94.183.141,TCP,30587,80,HTTP,2048,132.92,Application,"SYN,ACK",POST /api/login HTTP/1.1
+110,client_app,server_app,26.775874,10.138.220.120,159.193.13.120,TCP,51339,21,SSH,128,118.047,Application,"PSH,ACK",SSH-2.0-OpenSSH_8.9p1
+111,client_app,server_app,27.101185,192.167.150.107,40.242.146.104,UDP,36764,143,HTTP,128,139.861,Application,ACK,HTTP/1.1 404 Not Found
+112,client_app,server_app,27.186397,10.232.122.155,91.91.111.135,UDP,50121,995,FTP,256,40.906,Transport,"PSH,ACK",220 Service ready
+113,client_app,server_app,27.63407,192.254.25.102,40.201.43.56,UDP,17908,22,HTTP,128,84.509,Application,,POST /api/login HTTP/1.1
+114,client_app,server_app,27.798116,10.79.215.228,114.130.106.139,UDP,34085,21,SMTP,0,87.882,Transport,"PSH,ACK",HELO mail.server.com
+115,client_app,server_app,28.17018,192.164.82.54,27.47.20.109,UDP,54628,22,HTTPS,1024,135.211,Transport,ACK,Data payload for HTTPS
+116,client_app,server_app,28.545148,172.7.246.92,69.141.113.223,TCP,22384,21,SSH,0,20.108,Application,"PSH,ACK",Diffie-Hellman Key Exchange
+117,client_app,server_app,28.627641,10.31.144.252,42.66.213.123,UDP,23873,80,HTTPS,1024,50.79,Application,,Data payload for HTTPS
+118,client_app,server_app,28.815922,192.249.201.188,147.232.154.13,TCP,28018,21,SSH,512,46.774,Transport,"SYN,ACK",Diffie-Hellman Key Exchange
+119,client_app,server_app,28.852095,10.135.150.104,175.122.44.246,TCP,5672,80,SSH,512,46.056,Application,RST,Diffie-Hellman Key Exchange
+120,client_app,server_app,29.011823,192.57.253.212,177.26.145.215,TCP,37216,995,SSH,64,83.698,Transport,,SSH-2.0-OpenSSH_8.9p1
+121,client_app,server_app,29.333907,172.89.95.33,128.54.96.178,TCP,41836,143,HTTP,512,66.133,Application,SYN,GET /index.html HTTP/1.1
+122,client_app,server_app,29.485958,10.235.156.77,74.125.73.128,TCP,3005,110,SSH,256,116.696,Application,"PSH,ACK",SSH-2.0-OpenSSH_8.9p1
+123,client_app,server_app,29.514512,172.24.215.101,201.125.180.68,UDP,38521,53,FTP,256,85.472,Transport,SYN,220 Service ready
+124,client_app,server_app,29.931086,192.76.121.73,109.52.148.207,UDP,54214,21,HTTPS,128,144.304,Application,,Data payload for HTTPS
+125,client_app,server_app,30.27895,172.229.108.96,90.199.53.41,UDP,60062,80,DNS,128,65.987,Transport,ACK,Standard query MX gmail.com
+126,client_app,server_app,30.455405,172.149.84.99,87.115.237.183,UDP,53830,53,HTTPS,256,1.55,Transport,"PSH,ACK",Data payload for HTTPS
+127,client_app,server_app,30.848499,192.143.182.88,162.229.116.111,TCP,4383,53,SSH,256,4.022,Transport,"SYN,ACK",SSH-2.0-OpenSSH_8.9p1
+128,client_app,server_app,31.137197,172.137.120.155,178.252.109.248,UDP,32899,993,FTP,64,141.163,Application,"FIN,ACK",LIST -al
+129,client_app,server_app,31.629753,192.167.70.220,24.53.149.57,UDP,37791,993,HTTP,128,145.375,Application,"PSH,ACK",HTTP/1.1 200 OK
+130,client_app,server_app,31.686962,192.123.160.178,23.227.184.204,TCP,14575,110,HTTPS,1024,91.957,Application,ACK,Data payload for HTTPS
+131,client_app,server_app,31.904779,192.243.173.148,213.194.140.233,TCP,9497,443,DNS,64,34.623,Application,SYN,Standard query 0x1234 A google.com
+132,client_app,server_app,32.114536,192.255.200.22,220.166.166.63,TCP,53281,110,HTTP,128,33.222,Application,SYN,GET /style.css HTTP/1.1
+133,client_app,server_app,32.555453,10.238.25.118,169.69.22.26,TCP,44157,995,HTTPS,1024,50.863,Application,,Data payload for HTTPS
+134,client_app,server_app,32.65806,172.93.227.84,122.102.165.203,UDP,39174,995,HTTP,512,63.417,Transport,"FIN,ACK",HTTP/1.1 404 Not Found
+135,client_app,server_app,32.728672,192.91.128.127,67.199.14.229,TCP,46918,53,SMTP,128,103.405,Transport,SYN,HELO mail.server.com
+136,client_app,server_app,32.74953,10.238.61.39,105.252.234.230,TCP,20604,80,SSH,512,21.717,Transport,"FIN,ACK",Diffie-Hellman Key Exchange
+137,client_app,server_app,33.053023,192.254.15.136,74.207.1.125,UDP,13468,53,HTTPS,64,56.179,Transport,ACK,Data payload for HTTPS
+138,client_app,server_app,33.112496,192.247.207.105,209.82.184.81,TCP,57492,443,HTTPS,0,10.236,Transport,RST,Data payload for HTTPS
+139,client_app,server_app,33.389431,192.144.110.57,158.193.250.12,UDP,60270,993,SSH,256,80.803,Application,RST,Key Exchange Init
+140,client_app,server_app,33.549178,172.179.198.14,22.103.137.90,TCP,26582,143,DNS,64,73.683,Transport,"FIN,ACK",Standard query MX gmail.com
+141,client_app,server_app,33.949541,10.166.203.195,105.198.181.176,TCP,64861,21,SMTP,0,20.015,Transport,SYN,QUIT
+142,client_app,server_app,34.074082,172.37.218.25,20.248.248.16,TCP,48680,80,HTTP,2048,52.282,Application,SYN,GET /index.html HTTP/1.1
+143,client_app,server_app,34.17861,10.149.146.229,78.207.101.201,TCP,45586,110,SSH,64,129.617,Application,"FIN,ACK",Diffie-Hellman Key Exchange
+144,client_app,server_app,34.639068,192.79.97.113,86.241.153.145,UDP,34683,143,DNS,64,89.301,Application,SYN,Standard query MX gmail.com
+145,client_app,server_app,34.93398,192.78.88.160,78.87.210.23,UDP,39064,995,SMTP,512,15.359,Transport,"FIN,ACK",QUIT
+146,client_app,server_app,35.262046,172.177.238.172,81.196.185.194,TCP,15689,143,SSH,256,73.935,Transport,"SYN,ACK",Key Exchange Init
+147,client_app,server_app,35.561775,172.248.208.4,169.124.41.63,UDP,51777,21,SMTP,64,82.631,Transport,"PSH,ACK",MAIL FROM:<alice@example.com>
+148,client_app,server_app,35.751345,172.32.194.63,213.76.116.42,TCP,12543,995,DNS,64,72.638,Transport,,Standard query MX gmail.com
+149,client_app,server_app,35.945307,10.203.251.227,130.114.75.73,TCP,41039,995,SMTP,64,27.439,Transport,"SYN,ACK",MAIL FROM:<alice@example.com>
+150,client_app,server_app,36.339488,192.118.77.176,143.71.15.252,UDP,55977,53,HTTPS,0,18.033,Transport,ACK,Data payload for HTTPS
+151,client_app,server_app,36.528906,172.209.85.44,54.180.67.4,UDP,5746,53,HTTP,512,95.283,Transport,RST,HTTP/1.1 200 OK
+152,client_app,server_app,36.531038,10.4.145.250,114.71.184.25,TCP,47558,110,HTTP,1024,66.072,Application,RST,HTTP/1.1 200 OK
+153,client_app,server_app,36.599182,172.15.141.157,217.176.187.75,TCP,21353,53,HTTPS,1024,66.544,Transport,"PSH,ACK",Data payload for HTTPS
+154,client_app,server_app,37.061127,10.231.121.97,71.112.31.31,UDP,19269,143,HTTP,256,16.034,Transport,,HTTP/1.1 404 Not Found
+155,client_app,server_app,37.070616,172.144.150.236,154.207.198.161,TCP,6976,22,HTTPS,1024,56.36,Transport,,Data payload for HTTPS
+156,client_app,server_app,37.183537,172.122.255.65,79.33.151.130,UDP,64414,443,HTTPS,256,129.072,Transport,"FIN,ACK",Data payload for HTTPS
+157,client_app,server_app,37.630013,172.40.243.5,186.135.97.181,TCP,53128,21,SSH,128,73.613,Application,"FIN,ACK",Key Exchange Init
+158,client_app,server_app,38.018352,172.210.137.138,157.245.40.206,UDP,33449,143,HTTP,2048,51.213,Application,"PSH,ACK",GET /style.css HTTP/1.1
+159,client_app,server_app,38.200877,10.18.18.196,165.225.252.83,TCP,16003,995,FTP,256,111.594,Application,ACK,RETR readme.txt
+160,client_app,server_app,38.207486,10.128.172.130,142.210.210.58,TCP,33640,80,FTP,0,51.09,Transport,"FIN,ACK",USER administrator
+161,client_app,server_app,38.560087,192.226.89.206,83.229.14.181,UDP,57104,995,HTTP,1024,77.791,Application,SYN,HTTP/1.1 200 OK
+162,client_app,server_app,39.056646,10.183.64.61,79.143.106.235,TCP,33223,21,DNS,64,106.024,Application,"PSH,ACK",Standard query 0x5678 AAAA youtube.com
+163,client_app,server_app,39.193239,192.120.233.48,185.99.128.114,TCP,64177,993,SSH,64,118.725,Transport,RST,SSH-2.0-OpenSSH_8.9p1
+164,client_app,server_app,39.607859,10.44.197.23,201.107.80.14,UDP,25372,443,SMTP,64,108.794,Transport,ACK,RCPT TO:<bob@example.com>
+165,client_app,server_app,39.862675,172.166.212.85,136.106.137.127,TCP,50422,53,SMTP,256,31.055,Transport,"SYN,ACK",MAIL FROM:<alice@example.com>
+166,client_app,server_app,39.968919,192.208.152.81,106.175.157.217,TCP,27859,21,DNS,256,12.576,Transport,,Standard query MX gmail.com
+167,client_app,server_app,40.118453,192.253.1.79,107.52.236.63,TCP,37527,143,HTTPS,0,41.88,Transport,"FIN,ACK",Data payload for HTTPS
+168,client_app,server_app,40.19457,10.47.140.71,220.18.248.145,UDP,24493,993,DNS,64,77.307,Application,"FIN,ACK",Standard query response A 142.250.1.1
+169,client_app,server_app,40.434068,192.112.64.150,175.118.18.15,TCP,53651,80,DNS,256,71.066,Transport,SYN,Standard query response A 142.250.1.1
+170,client_app,server_app,40.62798,10.56.185.144,223.210.104.68,TCP,15293,443,DNS,256,85.453,Application,"SYN,ACK",Standard query 0x5678 AAAA youtube.com
+171,client_app,server_app,40.887689,10.185.45.244,134.175.114.133,TCP,19895,53,SSH,512,57.668,Transport,SYN,SSH-2.0-OpenSSH_8.9p1
+172,client_app,server_app,41.34222,192.233.146.177,220.201.27.71,UDP,2671,443,SSH,64,47.751,Transport,"PSH,ACK",SSH-2.0-OpenSSH_8.9p1
+173,client_app,server_app,41.345566,172.42.57.20,220.175.36.214,UDP,50910,22,HTTP,64,4.211,Transport,"SYN,ACK",HTTP/1.1 200 OK
+174,client_app,server_app,41.451357,192.149.228.181,153.50.147.9,TCP,53958,21,DNS,64,13.198,Application,ACK,Standard query MX gmail.com
+175,client_app,server_app,41.457412,10.67.88.212,169.123.245.68,UDP,24885,443,SMTP,512,148.334,Application,RST,RCPT TO:<bob@example.com>
+176,client_app,server_app,41.557308,10.159.205.28,39.62.128.246,TCP,46076,25,SSH,64,118.132,Application,RST,Key Exchange Init
+177,client_app,server_app,41.990577,172.28.208.108,203.210.62.11,TCP,5892,80,SMTP,64,105.335,Transport,"PSH,ACK",MAIL FROM:<alice@example.com>
+178,client_app,server_app,42.487298,10.97.147.42,189.135.15.130,TCP,47961,110,HTTPS,0,133.625,Application,ACK,Data payload for HTTPS
+179,client_app,server_app,42.658182,172.159.13.148,74.209.172.44,UDP,59180,80,SMTP,256,145.812,Transport,"PSH,ACK",250 OK
+180,client_app,server_app,43.036144,10.37.79.108,128.182.48.75,TCP,57238,80,FTP,512,83.884,Application,RST,RETR readme.txt
+181,client_app,server_app,43.229962,192.68.226.215,88.6.242.192,UDP,3562,110,SMTP,64,61.93,Application,SYN,250 OK
+182,client_app,server_app,43.42021,172.85.213.246,196.167.221.162,TCP,64629,22,SSH,0,111.314,Transport,ACK,SSH-2.0-OpenSSH_8.9p1
+183,client_app,server_app,43.506008,172.9.108.190,119.170.150.158,UDP,28663,25,FTP,256,4.882,Application,ACK,USER administrator
+184,client_app,server_app,43.938475,172.207.11.141,128.154.87.51,UDP,29345,22,SMTP,128,35.995,Transport,"PSH,ACK",MAIL FROM:<alice@example.com>
+185,client_app,server_app,44.367813,172.132.153.253,187.124.226.204,UDP,19758,22,DNS,256,34.012,Transport,"PSH,ACK",Standard query response A 142.250.1.1
+186,client_app,server_app,44.44301,172.161.92.86,126.140.80.9,TCP,21483,995,HTTPS,64,69.234,Application,"SYN,ACK",Data payload for HTTPS
+187,client_app,server_app,44.554335,10.49.170.81,24.47.187.213,UDP,58626,995,HTTPS,1024,84.084,Transport,ACK,Data payload for HTTPS
+188,client_app,server_app,45.040902,172.103.126.166,161.235.28.107,UDP,24641,21,HTTPS,2048,141.129,Transport,,Data payload for HTTPS
+189,client_app,server_app,45.486178,172.196.129.26,63.78.239.19,UDP,65264,443,FTP,128,10.448,Transport,"PSH,ACK",LIST -al
+190,client_app,server_app,45.950789,192.139.218.9,215.61.222.105,UDP,48324,110,SSH,512,72.856,Transport,SYN,SSH-2.0-OpenSSH_8.9p1
+191,client_app,server_app,46.01482,10.28.254.99,78.130.127.164,UDP,35342,143,SSH,64,113.307,Application,RST,Diffie-Hellman Key Exchange
+192,client_app,server_app,46.024454,192.131.36.132,145.174.242.170,UDP,60531,21,SSH,0,18.743,Application,"PSH,ACK",Diffie-Hellman Key Exchange
+193,client_app,server_app,46.303521,172.119.41.5,159.108.120.189,TCP,3738,443,HTTP,2048,11.449,Application,"SYN,ACK",POST /api/login HTTP/1.1
+194,client_app,server_app,46.632049,10.155.152.210,144.98.215.78,UDP,43799,80,DNS,256,109.338,Transport,"FIN,ACK",Standard query 0x1234 A google.com
+195,client_app,server_app,46.67471,10.237.231.207,40.79.188.153,TCP,24375,110,FTP,512,60.173,Application,SYN,USER administrator
+196,client_app,server_app,47.088963,172.168.167.232,79.52.32.247,TCP,48397,21,HTTP,256,39.931,Transport,"FIN,ACK",GET /index.html HTTP/1.1
+197,client_app,server_app,47.296002,192.233.56.58,130.55.63.112,UDP,35015,80,HTTP,256,32.056,Application,ACK,GET /style.css HTTP/1.1
+198,client_app,server_app,47.547828,10.155.10.88,134.107.209.48,TCP,45708,25,HTTP,2048,38.656,Transport,,HTTP/1.1 200 OK
+199,client_app,server_app,47.84771,192.32.245.99,22.228.213.228,TCP,30210,22,HTTPS,0,71.396,Application,,Data payload for HTTPS
+200,client_app,server_app,48.143602,172.205.163.76,169.61.255.89,TCP,8172,21,HTTPS,512,9.481,Application,ACK,Data payload for HTTPS

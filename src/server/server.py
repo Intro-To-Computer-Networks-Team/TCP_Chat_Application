@@ -95,6 +95,7 @@ class ChatServer:
                 # Continuously listen for messages from this client
                 message = client_socket.recv(1024).decode('utf-8')
                 if not message:
+                    # Client has disconnected
                     break
 
                 if ':' in message:
@@ -125,15 +126,15 @@ class ChatServer:
                 # Notify remaining clients about updated contact list
                 time.sleep(0.1)
                 print(f"[DISCONNECT] {username} disconnected.")
-                time.sleep(0.1)
+                time.sleep(0.5)
                 print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
                 self.update_contacts()
 
-        # Close the client socket
-        try:
-            client_socket.close()
-        except Exception as e:
-            print(f"[ERROR] Could not close client socket for {username}: {e}")
+            # Close the client socket
+            try:
+                client_socket.close()
+            except Exception as e:
+                print(f"[ERROR] Could not close client socket for {username}: {e}")
 
     # ==================== DISCONNECTION NOTIFICATION ====================
     def notify_disconnection(self, disconnected_username):
@@ -186,18 +187,34 @@ class ChatServer:
             print("[SERVER] Broadcasting shutdown message to all clients")
             shutdown_msg = "[Server]: Server is shutting down. Disconnecting...\n"
             active_sockets = list(self.clients.values())
+
+            # Notify all clients about server shutdown
             for client_socket in active_sockets:
                 try:
                     client_socket.send(shutdown_msg.encode('utf-8'))
-                    time.sleep(0.1)
                 except Exception as e:
                     print(f"[ERROR] Could not send shutdown message to a client: {e}")
-                finally:
-                    try:
-                        client_socket.close()
-                    except Exception as e:
-                        print(f"[ERROR] Could not close client socket: {e}")
+
+            # Give clients time to receive and process the shutdown message
+            time.sleep(1.0)
+
+            # Now gracefully shutdown and close all client sockets
+            for client_socket in active_sockets:
+                try:
+                    # Shutdown the socket first to send FIN
+                    client_socket.shutdown(socket.SHUT_RDWR)
+                except Exception as e:
+                    print(f"[ERROR] Could not shutdown client socket: {e}")
+
+                try:
+                    # Then close it
+                    client_socket.close()
+                except Exception as e:
+                    print(f"[ERROR] Could not close client socket: {e}")
+
+            # Close server socket
             try:
+                self.server_socket.shutdown(socket.SHUT_RDWR)
                 self.server_socket.close()
             except Exception as e:
                 print(f"[ERROR] Could not close server socket: {e}")
