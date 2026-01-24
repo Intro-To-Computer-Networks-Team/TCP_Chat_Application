@@ -1,95 +1,211 @@
 import socket
 import threading
+import time
+import sqlite3
 
-# Server Configuration
+# ==================== SERVER CONFIGURATION ====================
 HOST = '0.0.0.0'  # Listen on all available network interfaces
 PORT = 4000       # Port to listen on
+max_clients = 5  # Maximum number of concurrent client connections
+# ==================== CHAT SERVER ====================
+class ChatServer:
+    """Multithreaded chat server handling client connections and message routing."""
+    def __init__(self):
+        """Initialize server socket, database, and client tracking structures."""
+        # Create TCP socket for client connections
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((HOST, PORT))
 
-# Dictionary to store connected clients: {username: socket_object}
-clients = {}
+        # Set socket options to optimize performance
+        self.server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
-def handle_client(client_socket):
-    """
-    Handles the connection for a single client in a separate thread.
-    Manages authentication (username) and message routing.
-    """
-    username = ""
-    try:
-        # Step 1: Registration - Request and receive username
-        client_socket.send("Welcome! Please enter your username: ".encode('utf-8'))
-        username = client_socket.recv(1024).decode('utf-8').strip()
-        
-        # Check if username is already taken
-        if username in clients:
-            client_socket.send("Username already taken. Disconnecting.".encode('utf-8'))
+        # Initialize database for message persistence
+        self.init_db()
+
+        # Dictionary mapping usernames to their socket connections
+        self.clients = {}
+
+        # Lock for thread-safe access to shared client dictionary
+        self.lock = threading.Lock()
+
+    # ==================== DATABASE SETUP ====================
+    def init_db(self):
+        """Create database and messages table if they don't exist."""
+        connection = sqlite3.connect('server_chat.db', check_same_thread=False)
+        cursor = connection.cursor()
+        cursor.execute('''CREATE TABLE IF NOT EXISTS messages (
+                sender TEXT,
+                receiver TEXT,
+                message TEXT
+            )
+        ''')
+        connection.commit()
+        connection.close()
+
+    # ==================== CONTACT LIST MANAGEMENT ====================
+    def update_contacts(self):
+        """Broadcast updated list of online users to all connected clients."""
+        # Build comma-separated list of online usernames
+        with self.lock:
+            contact_list = ",".join(self.clients.keys())
+            msg = f"CONTACTS:{contact_list}\n"
+            print(f"[DEBUG CONTACT DATA]: {contact_list}")
+            print(f"[DEBUG CLIENTS COUNT]: {len(self.clients)}")
+        # Send updated contact list to all connected clients
+        active_sockets = list(self.clients.values())
+        for i, client_socket in enumerate(active_sockets):
+            try:
+                print(f"[DEBUG] Sending contact update to client #{i+1}")
+                client_socket.send(msg.encode('utf-8'))
+            except Exception as e:
+                print(f"[ERROR] Could not update contacts for client #{i+1}: {e}")
+
+    # ==================== CLIENT CONNECTION HANDLER ====================
+    def handle_client(self, client_socket):
+        """Handle individual client connection: authentication, message routing, and cleanup."""
+        username = ""
+        try:
+            # ==================== AUTHENTICATION PHASE ====================
+            # Request username from newly connected client
+            client_socket.send("Welcome! Please enter your username: ".encode('utf-8'))
+            username = client_socket.recv(1024).decode('utf-8').strip()
+
+            # Check if username is already taken
+            with self.lock:
+                if username in self.clients:
+                    client_socket.send("[Server]: Username already taken. Disconnecting.".encode('utf-8'))
+                    client_socket.close()
+                    return
+
+            # Register new client in the clients dictionary
+            self.clients[username] = client_socket
+            print(f"[NEW CONNECTION] {username} connected.")
+
+            # Notify all clients of updated contact list
+            time.sleep(0.1)
+            self.update_contacts()
+
+            # Send welcome message to the newly connected client
+            welcome= f"Connected successfully as {username}.\n"
+            time.sleep(0.1)
+            client_socket.send(welcome.encode('utf-8'))
+
+            # ==================== MESSAGE ROUTING LOOP ====================
+            while True:
+                # Continuously listen for messages from this client
+                message = client_socket.recv(1024).decode('utf-8')
+                if not message:
+                    break
+
+                if ':' in message:
+                    # Parse message format: "recipient:content"
+                    target_name, msg_content = message.split(':', 1)
+                    target_name = target_name.strip()
+
+                    if target_name in self.clients:
+                        # Route message to target recipient if online
+                        dest_socket = self.clients[target_name]
+                        dest_socket.send(f"{username}: {msg_content}".encode('utf-8'))
+                    else:
+                        # Notify sender if recipient is not found
+                        client_socket.send(f"[Server]: User '{target_name}' not found.".encode('utf-8'))
+                        self.update_contacts()
+
+        except ConnectionResetError:
+            print(f"[ERROR] Connection lost with {username}")
+            self.notify_disconnection(username)
+        except Exception as e:
+            print(f"[ERROR] Error handling client {username}: {e}")
+            self.notify_disconnection(username)
+        finally:
+            # ==================== CLEANUP ON DISCONNECT ====================
+            # Remove client from active clients list
+            if username in self.clients:
+                del self.clients[username]
+                # Notify remaining clients about updated contact list
+                time.sleep(0.1)
+                print(f"[DISCONNECT] {username} disconnected.")
+                time.sleep(0.1)
+                print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
+                self.update_contacts()
+
+        # Close the client socket
+        try:
             client_socket.close()
-            return
+        except Exception as e:
+            print(f"[ERROR] Could not close client socket for {username}: {e}")
 
-        # Add client to the active list
-        clients[username] = client_socket
-        print(f"[NEW CONNECTION] {username} connected.")
-        
-        # Send instructions to the client
-        instructions = f"Connected successfully as {username}.\nTo chat, use format: DEST_NAME:MESSAGE"
-        client_socket.send(instructions.encode('utf-8'))
+    # ==================== DISCONNECTION NOTIFICATION ====================
+    def notify_disconnection(self, disconnected_username):
+        """Notify all clients about a user's disconnection."""
+        msg = f"[Server]: User: '{disconnected_username}' has disconnected."
+        active_sockets = list(self.clients.values())
+        for client_socket in active_sockets:
+            try:
+                client_socket.send(msg.encode('utf-8'))
+            except Exception as e:
+                print(f"[ERROR] Could not notify disconnection to a client: {e}")
+    # ==================== SERVER MAIN LOOP ====================
+    def start_server(self):
+        """Start listening for incoming client connections and spawn handler threads."""
+        # Begin listening for incoming connections (queue up to 5)
+        self.server_socket.listen(max_clients) # Allow up to 5 queued connections (change as needed)
+        print(f"[LISTENING] Server is listening on {HOST}:{PORT}")
+        self.server_socket.settimeout(1.0)  # Set timeout to allow graceful shutdown
+        # Accept and handle client connections continuously
+        try:
+            while True:
+                try:
+                    # Accept new client connection
+                    client_sock, addr = self.server_socket.accept()
+                    print(f"[CONNECTION] Connection from {addr}")
 
-        # Step 2: Main loop - Listen for messages from this client
-        while True:
-            message = client_socket.recv(1024).decode('utf-8')
-            if not message:
-                break # Client disconnected
+                    #Check for maximum connections
+                    with self.lock:
+                        if len(self.clients) >=max_clients: # Max 5 connections (change as needed)
+                            print(f"[MAX CONNECTIONS REACHED] Rejecting connection from {addr}")
+                            try:
+                                client_sock.send("[Server]: Maximum connections reached. Try again later.".encode('utf-8'))
+                            except Exception as e:
+                                print(f"[ERROR] Could not send max connection message to {addr}: {e}")
+                            client_sock.close()
+                            continue
 
-            # Expected message format: TARGET_NAME:MESSAGE_CONTENT
-            if ':' in message:
-                target_name, msg_content = message.split(':', 1)
-                
-                # Check if the target user exists
-                if target_name in clients:
-                    dest_socket = clients[target_name]
-                    # Forward the message to the target client
-                    dest_socket.send(f"[{username}]: {msg_content}".encode('utf-8'))
-                else:
-                    # Notify sender that user was not found
-                    client_socket.send(f"[SERVER]: User '{target_name}' not found.".encode('utf-8'))
-            else:
-                client_socket.send("[SERVER]: Invalid format. Use TARGET:MESSAGE".encode('utf-8'))
+                    # Spawn new thread to handle this client
+                    thread = threading.Thread(target=self.handle_client, args=(client_sock,))
+                    thread.start()
+                except socket.timeout:
+                    continue
 
-    except ConnectionResetError:
-        print(f"[ERROR] Connection lost with {username}")
-    except Exception as e:
-        print(f"[ERROR] Error handling client {username}: {e}")
-    finally:
-        # Cleanup: Remove client from list and close socket
-        if username in clients:
-            del clients[username]
-            print(f"[DISCONNECT] {username} disconnected.")
-        client_socket.close()
+                # Display current number of active connections
+                print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
+        except KeyboardInterrupt:
+            print("\n[SHUTTING DOWN] Server is shutting down.")
+        finally:
+            # Close the server socket on shutdown
+            print("[SERVER] Broadcasting shutdown message to all clients")
+            shutdown_msg = "[Server]: Server is shutting down. Disconnecting...\n"
+            active_sockets = list(self.clients.values())
+            for client_socket in active_sockets:
+                try:
+                    client_socket.send(shutdown_msg.encode('utf-8'))
+                    time.sleep(0.1)
+                except Exception as e:
+                    print(f"[ERROR] Could not send shutdown message to a client: {e}")
+                finally:
+                    try:
+                        client_socket.close()
+                    except Exception as e:
+                        print(f"[ERROR] Could not close client socket: {e}")
+            try:
+                self.server_socket.close()
+            except Exception as e:
+                print(f"[ERROR] Could not close server socket: {e}")
 
-def start_server():
-    """
-    Main function to start the server and accept incoming connections.
-    """
-    # Create a TCP/IP socket
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    
-    # Bind the socket to the address and port
-    server.bind((HOST, PORT))
-    
-    # Listen for incoming connections (queue of 5)
-    server.listen(5)
-    print(f"[LISTENING] Server is listening on {HOST}:{PORT}")
 
-    while True:
-        # Accept a new connection
-        client_sock, addr = server.accept()
-        print(f"[CONNECTION] Connection from {addr}")
-        
-        # Create a new thread to handle this client specifically
-        thread = threading.Thread(target=handle_client, args=(client_sock,))
-        thread.start()
-        
-        # specific to project requirements: Handle multiple clients concurrently
-        print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
-
+# ==================== SERVER ENTRY POINT ====================
 if __name__ == "__main__":
-    start_server()
+    # Create and start the chat server
+    server = ChatServer()
+    server.start_server()
+
