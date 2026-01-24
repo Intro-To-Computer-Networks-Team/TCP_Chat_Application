@@ -6,7 +6,8 @@ import sqlite3
 import os
 from datetime import datetime
 import time
-
+#Custom tkinter theme 
+import customtkinter as ctk
 # Server Connection Details
 SERVER_IP = '127.0.0.1' # Localhost (change this if server is on another machine)
 SERVER_PORT = 4000
@@ -66,7 +67,8 @@ class ChatApp:
         except Exception as e:
             print(f"Warning: Could not load icon: {e}")
 
-        self.root.configure(bg="#121b22")
+        #Backgroud color 
+        self.root.configure(bg="#131417")
 
     def load_theme(self):
         # Load the theme file relative to this script's directory so it works
@@ -81,69 +83,134 @@ class ChatApp:
 
     def create_login_ui(self):
         """Build the login interface."""
-        self.login_frame = ttk.Frame(self.root)
-
+        self.login_frame = tk.Frame(self.root, bg="#131417")
         # Instruction Label
-        self.lbl_instruction = ttk.Label(self.login_frame, text="Welcome! Please Log In:", font=("Arial", 16))
+        #Changing the font the Monserrat
+        self.lbl_instruction = tk.Label(self.login_frame, text="Enter your name below:", font=("Helvatica", 15), background="#131417")
         self.lbl_instruction.pack(pady=20)
 
         # Username Entry
-        self.name_entry = ttk.Entry(self.login_frame, font=("Arial", 12))
+#        self.name_entry = tk.Entry(self.login_frame, font=("Helvatica", 12),background="#131417")
+        self.name_entry = ctk.CTkEntry(
+            self.login_frame, 
+            width=250, 
+            height=40, 
+            corner_radius=20,       # Rounded corners
+            fg_color="#2D2D31",     # Background color
+            border_color="#2D2D31", 
+            text_color="#EEEFF3"
+        )
+        self.name_entry.pack(pady=2)
+ 
         self.name_entry.pack(pady=10, ipadx=10, ipady=5)
         self.name_entry.bind('<Return>', self.connect_and_login)
-
-        btn=ttk.Button(self.login_frame, text="Enter Chat", style="Accent.TButton", command=self.connect_and_login)
-        btn.pack(pady=20, fill='x')
-
+        
+        btn = ctk.CTkButton(
+            self.login_frame,
+            text="Enter Chat",
+            command=self.connect_and_login,
+            
+            # Font Style
+            font=('Helvetica', 12),
+            
+            # Colors
+            fg_color="#3B95FF",        # Default background color 
+            text_color="#FFFFFF",    # Text color 
+            hover_color="#5DA7FC",  # Color when mouse hovers 
+            
+            
+            # Shape & Padding
+            corner_radius=20,        
+            height=40,               
+        )
+        
+        btn.pack(pady=20,fill='x')
+        self.login_frame.pack(expand=True)
+        
     def create_chat_ui(self):
         """Build the main chat interface with contacts list and message area."""
-        self.chat_frame = tk.Frame(self.root, bg="#121b22")
+        self.chat_frame = tk.Frame(self.root, bg="#131417")
 
         # ==================== SIDEBAR: CONTACTS LIST ====================
-        self.sidebar = tk.Frame(self.chat_frame, width=250, bg="#202c33")
+        self.sidebar = tk.Frame(self.chat_frame, width=250, bg="#131417")
         self.sidebar.pack(side=tk.LEFT, fill=tk.Y)
         self.sidebar.pack_propagate(False)
 
-        ttk.Label(self.sidebar, text="Contacts", background="#202c33", foreground="white", font=("Arial", 12)).pack(pady=10)
+        tk.Label(self.sidebar, text="Contacts", bg="#131417", foreground="white", font=("Montserrat", 12)).pack(pady=10)
+        #Adding a bottom border to the contacts list
+        tk.Frame(
+            self.sidebar, 
+            background="#D3D3D3",   # Light Grey
+            height=1                # Thickness
+        ).pack(fill="x", pady=(0, 10))
         self.contacts = ttk.Treeview(self.sidebar, columns=("Username","Alerts"), show="headings",selectmode="browse")
         self.contacts.heading("Username", text="Online Users")
         self.contacts.heading("Alerts", text="New Msgs")
 
         self.contacts.column("Username", width=160, anchor=tk.W)
         self.contacts.column("Alerts", width=80, anchor=tk.CENTER)
-        self.contacts.tag_configure('msg_alert', foreground='#ff4444')
+        self.contacts.tag_configure('msg_alert')
 
         self.contacts.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         self.contacts.bind("<<TreeviewSelect>>", self.on_contact_click)
 
         # ==================== MAIN CHAT AREA ====================
-        self.main_area = tk.Frame(self.chat_frame, bg="#0b141a")
+        self.main_area = tk.Frame(self.chat_frame, bg="#131417")
         self.main_area.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
         # Header showing current chat recipient
-        self.header_frame = tk.Frame(self.main_area, bg="#202c33", height=50)
+        self.header_frame = tk.Frame(self.main_area, bg="#131417", height=50)
         self.header_frame.pack(fill="x")
-        self.chat_label = tk.Label(self.header_frame, text="Select a user...", bg="#202c33", fg="white",font=("Arial", 12))
+        self.chat_label = tk.Label(self.header_frame, text="Select a user...", bg="#131417", fg="white",font=("Montserrat", 12))
         self.chat_label.pack(pady=10)
 
         # Chat history display area
-        self.chat_history = scrolledtext.ScrolledText(self.main_area, state='disabled', bg="#0b141a", fg="white")
+        self.chat_history = scrolledtext.ScrolledText(self.main_area, state='disabled', bg="#131417",fg="white")
         self.chat_history.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-        self.chat_history.tag_config('me', justify='right', foreground='#00ff00')
-        self.chat_history.tag_config('other', justify='left', foreground='#ffffff')
-        self.chat_history.tag_config("time_tag", foreground="gray", font=("Arial", 8))
+        self.chat_history.tag_config('me', justify='right', foreground='#3B95FF')
+        self.chat_history.tag_config('other', justify='left',foreground='#ffffff')
+        self.chat_history.tag_config("time_tag", foreground="gray", font=("Montserrat", 8))
 
-        # ==================== MESSAGE INPUT AREA ====================
-        input_area = tk.Frame(self.main_area, bg="#202c33", height=60)
-        input_area.pack(fill="x",side="bottom")
-
-        self.msg_entry = ttk.Entry(input_area, font=("Arial", 11))
-        self.msg_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=10, pady=10)
+# ==================== MESSAGE INPUT AREA ====================
+        input_area = tk.Frame(self.main_area, bg="#131417", height=60)
+        input_area.pack(side=tk.BOTTOM, fill=tk.X)
+        
+        # Message Entry Field
+        self.msg_entry = ctk.CTkEntry(
+            input_area,             
+            font=("Montserrat", 11),
+            bg_color="#1B1D22",    
+            corner_radius=10,
+            fg_color="#2A2A2E",
+            border_color="#3C3C40",
+            text_color="#FFFFFF"
+        )
+        # Pack to the LEFT and let it expand to fill available space
+        self.msg_entry.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(20, 10), pady=15)
         self.msg_entry.bind("<Return>", self.send_message)
 
-        send_button = ttk.Button(input_area, text="Send",style="Accent.TButton",command=self.send_message)
-        send_button.pack(side=tk.RIGHT, padx=10)
-
+        # Send Button
+        send_btn = ctk.CTkButton(
+            input_area,
+            text="Send",
+            command=self.send_message, 
+            
+            # Font Style
+            font=('Helvetica', 12),
+            
+            # Colors
+            fg_color="#3B95FF",
+            text_color="#FFFFFF",
+            hover_color="#5DA7FC",
+            
+            # Shape & Size
+            corner_radius=10,
+            height=30,      
+            width=80        
+        )
+        
+        # Pack to the RIGHT side
+        send_btn.pack(side=tk.RIGHT, padx=(0, 20), pady=15)
     # ==================== FRAME SWITCHING ====================
     def show_login_frame(self):
         """ Display the login frame and hide the chat frame."""
@@ -374,6 +441,7 @@ class ChatApp:
             self.msg_entry.delete(0, tk.END)
         except Exception as e:
             messagebox.showerror("Error", f"Failed to send: {e}")
+            
     # ==================== CONTACT SELECTION ====================
     def on_contact_click(self, event):
         """ Handle contact selection from the contact list."""
@@ -388,7 +456,7 @@ class ChatApp:
             if self.recipient == clicked_name:
                 return  # Already chatting with this user
             self.recipient = clicked_name
-            self.chat_label.config(text=f"Chat with: {self.recipient}", fg="#00ff00")
+            self.chat_label.config(text=f"Chat with: {self.recipient}", fg="#becbd1")
             # Clear unread messages for this contact
             if clicked_name in self.unread_messages:
                 del self.unread_messages[clicked_name]
