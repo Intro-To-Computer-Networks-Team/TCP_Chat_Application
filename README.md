@@ -106,8 +106,7 @@ The system maintains consistency between Server and Client databases, with the C
    pip install customtkinter
     ```
 4. It is good practice to run this project in a virtual environment to keep dependencies isolated.
-
-1. **Create the virtual environment:**
+. **Create the virtual environment:**
    ```bash
    python3 -m venv .venv
    ```
