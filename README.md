@@ -105,6 +105,20 @@ The system maintains consistency between Server and Client databases, with the C
    ```bash
    pip install customtkinter
     ```
+4. It is good practice to run this project in a virtual environment to keep dependencies isolated.
+
+1. **Create the virtual environment:**
+   ```bash
+   python3 -m venv .venv
+   ```
+   **Windows**
+   ```bash
+   .venv\Scripts\activate
+    ```
+   **Mac \ Linux**
+   ```
+   source .venv/bin/activate  
+   ```
 
 ##  Usage
 To simulate a chat environment, you will need to run the server in one terminal and multiple client instances in separate terminals.
