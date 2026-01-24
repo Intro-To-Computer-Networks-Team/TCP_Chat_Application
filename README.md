@@ -63,6 +63,7 @@ The system maintains consistency between Server and Client databases, with the C
 
 ### Prerequisites
 * Python 3.x (includes `socket`, `threading`, `sqlite3`, `tkinter`)
+* CustomTkinter
 
 ### Installation
 1. Clone the repository:
@@ -72,6 +73,10 @@ The system maintains consistency between Server and Client databases, with the C
    ```bash
    cd TCP_Chat_Application/src
    ```
+3. Install CustomTkinter if not already installed:
+   ```bash
+   pip install customtkinter
+    ```
 
 ##  Usage
 To simulate a chat environment, you will need to run the server in one terminal and multiple client instances in separate terminals.
