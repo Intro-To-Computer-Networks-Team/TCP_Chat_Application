@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 ```
 
-## 1. Client Database 
+## 2. Client Database 
 **File:** `src/client/chat_history.db`
 The client maintains a local history of conversations, including timestamps for each message to facilitate local display and user experience.
 
