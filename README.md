@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS messages (
     message TEXT,
     timestamp TEXT
 );
+```
 The system maintains consistency between Server and Client databases, with the Client storing additional metadata (timestamps) for local display.
 
 | Column | Type | Description | Availability |
