@@ -21,7 +21,28 @@ It features a central server that acts as a switchboard, routing messages betwee
 - `LICENSE` — project license.
 
 ## 💾 Database Schema
+# Database Schema
 
+The TCP Messaging System utilizes **SQLite** for data persistence. The system maintains two distinct database structures: one for the central server and one for individual clients.
+
+## 1. Server Database
+**File:** `src/server/server_chat.db`
+
+The server stores a central log of all messages routed through the system. It does not store local display metadata (timestamps) as it focuses on routing and raw persistence.
+
+```sql
+CREATE TABLE IF NOT EXISTS messages (
+    sender TEXT,
+    receiver TEXT,
+    message TEXT
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+    sender TEXT,
+    receiver TEXT,
+    message TEXT,
+    timestamp TEXT
+);
 The system maintains consistency between Server and Client databases, with the Client storing additional metadata (timestamps) for local display.
 
 | Column | Type | Description | Availability |
