@@ -24,10 +24,3 @@ env/
 Thumbs.db
 ehthumbs.db
 
-# --- Project Specific ---
-# Note: Usually, large capture files (*.pcap) are ignored.
-# However, since this is a portfolio project and you want to 
-# demonstrate your analysis in the 'analysis/captures' folder, 
-# keep the following lines commented out (so pcap files ARE uploaded):
-# *.pcap
-# *.pcapng
