@@ -1,6 +1,7 @@
 import socket
 import threading
 import sys
+import os #blablabla
 
 # Server Connection Details
 SERVER_IP = '127.0.0.1' # Localhost (change this if server is on another machine)
